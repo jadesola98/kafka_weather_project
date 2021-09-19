@@ -4,8 +4,21 @@ import requests
 from datetime import datetime
 import time
 from json import dumps
-import json
 import pprint
+import psycopg2
+from psycopg2.extras import execute_values
+from psycopg2.extensions import register_adapter
+
+register_adapter(dict, json)
+
+
+connection = psycopg2.connect(user = qlecuxgz,
+    password = 8GST_1G0Q4lzdseGp05yTULFqWoWwDLv,
+    host = chunee.db.elephantsql.com,
+    port = 5432,
+    database = qlecuxgz)
+
+cursor = connection.cursor()
 
 weather_kafka_consumer = KafkaConsumer('weather', bootstrap_servers=['localhost:9092'],auto_offset_reset='earliest', value_deserializer=lambda m: json.loads(m.decode('utf-8')))
 
@@ -21,7 +34,7 @@ for i in weather_kafka_consumer:
     'weather_main': str(output['weather'][0]['main']),
     'weather_icon': str(output['weather'][0]['icon']),
     'weather_description': str(output['weather'][0]['description']),
-    'weather_description': str(output['base']),
+    'weather_base': str(output['base']),
     'temp': float(output['main']['temp']),
     'feels_like': float(output['main']['feels_like']),
     'temp_min': float(output['main']['temp_min']),
@@ -29,7 +42,6 @@ for i in weather_kafka_consumer:
     'pressure': int(output['main']['pressure']),
     'humidity': int(output['main']['humidity']),
     'sea_level': int(output['main']['sea_level']),
-    'humidity': int(output['main']['humidity']),
     'grnd_level': int(output['main']['grnd_level']),
     'visibility': int(output['visibility']),
     'wind_speed': float(output['wind']['speed']),
