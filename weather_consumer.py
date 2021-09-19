@@ -12,11 +12,11 @@ from psycopg2.extensions import register_adapter
 register_adapter(dict, json)
 
 
-connection = psycopg2.connect(user = qlecuxgz,
-    password = 8GST_1G0Q4lzdseGp05yTULFqWoWwDLv,
-    host = chunee.db.elephantsql.com,
+connection = psycopg2.connect(user = 'qlecuxgz',
+    password = '8GST_1G0Q4lzdseGp05yTULFqWoWwDLv',
+    host = 'chunee.db.elephantsql.com',
     port = 5432,
-    database = qlecuxgz)
+    database = 'qlecuxgz')
 
 cursor = connection.cursor()
 
@@ -60,9 +60,14 @@ for i in weather_kafka_consumer:
     'cod': int(output['cod'])
     }]
 
-    #print(clean_output)
-    ##TODO 1
-    # send data to DB realtime
+  
+    columns = clean_output [0].keys()
+    query = "INSERT INTO weather_data ({}) VALUES %s".format(','.join(columns))
+
+    # convert projects values to sequence of seqeences
+    values = [[value for value in item.values()] for item in clean_output]
+    execute_values(cursor, query, values)
+    connection.commit()
 
     ## TODO 2 
     #SEND to Power realtime
