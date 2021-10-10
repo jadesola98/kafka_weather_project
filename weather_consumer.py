@@ -12,11 +12,7 @@ from psycopg2.extensions import register_adapter
 register_adapter(dict, json)
 
 
-connection = psycopg2.connect(user = 'qlecuxgz',
-    password = '8GST_1G0Q4lzdseGp05yTULFqWoWwDLv',
-    host = 'chunee.db.elephantsql.com',
-    port = 5432,
-    database = 'qlecuxgz')
+connection = config.database_credentials
 
 cursor = connection.cursor()
 
